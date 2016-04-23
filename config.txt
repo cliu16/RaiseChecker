@@ -1,0 +1,9 @@
+Gift Card Name : target
+Price Min Per Card : 100
+Percent Min Per Card : 4.1
+Raise Username : xiaodeal_user@gmail.com
+Raise Password : xiaodeal_pass
+Gmail Username : xiaodeal_user
+Gmail Password : xiaodeal_pass
+Max Cards Per Order : 2
+Max Price Per Order : 2000

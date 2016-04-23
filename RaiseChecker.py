@@ -69,6 +69,7 @@ MailHandler.init(ConfigHandler.GmailUser, ConfigHandler.GmailPass)
 while True:
     process()
     time.sleep(5)
+    print "Ping : " + datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
 
 time.sleep(5)
 HttpHandler.logout()
