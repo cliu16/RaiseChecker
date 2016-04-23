@@ -7,6 +7,8 @@ RaiseUser=""
 RaisePass=""
 GmailUser=""
 GmailPass=""
+MaxCardsPerOrder=0
+MaxPricePerOrder=0
 
 def initConfig():
     with open(configFile) as f:
@@ -23,13 +25,15 @@ def fillParams(key, val):
     global RaisePass
     global GmailUser
     global GmailPass
+    global MaxCardsPerOrder
+    global MaxPricePerOrder
     
     if key == "Gift Card Name":
         GiftCardName=val
-    elif key == "Price Min":
-        PriceMin=val
-    elif key == "Percent Min":
-        PercentMin=val
+    elif key == "Price Min Per Card":
+        PriceMin=float(val)
+    elif key == "Percent Min Per Card":
+        PercentMin=float(val)
     elif key == "Raise Username":
         RaiseUser=val
     elif key == "Raise Password":
@@ -38,15 +42,21 @@ def fillParams(key, val):
         GmailUser=val
     elif key == "Gmail Password":
         GmailPass=val
+    elif key == "Max Cards Per Order":
+        MaxCardsPerOrder=int(val)
+    elif key == "Max Price Per Order":
+        MaxPricePerOrder=float(val)
 
 def displayConfig():
     ret = "Gift Card Name : " + str(GiftCardName) + "\n"
-    ret += "Price Min : " + str(PriceMin) + "\n"
-    ret += "Percent Min : " + str(PercentMin) + "\n"
+    ret += "Price Min Per Card: " + str(PriceMin) + "\n"
+    ret += "Percent Min Per Card: " + str(PercentMin) + "\n"
     ret += "Raise Username : " + str(RaiseUser) + "\n"
     ret += "Raise Password : " + str(RaisePass) + "\n"
     ret += "Gmail Username : " + str(GmailUser) + "\n"
     ret += "Gmail Password : " + str(GmailPass) + "\n"
+    ret += "Max Cards Per Order : " + str(MaxCardsPerOrder) + "\n"
+    ret += "Max Price Per Order : " + str(MaxPricePerOrder) + "\n"
     print ret
         
         

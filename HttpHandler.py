@@ -1,7 +1,6 @@
 from selenium import webdriver
 import time
 
-current_url=""
 driver=None
 
 def login(user, password):
@@ -18,15 +17,16 @@ def login(user, password):
     password_field.clear()
     password_field.send_keys(password)
     login_btn = driver.find_element_by_xpath('//input[@name="commit"]')
+    time.sleep(3)
     login_btn.click()
+    time.sleep(3)
 
 def gotoPage(url):
-    global current_url
     global driver
-    if(current_url == url):
+    if(driver.current_url == url):
         return
-    current_url = url
-    driver.get(current_url)
+    driver.get(url)
+    time.sleep(1)
     
 def addToCartById(giftCardName, id):
     global driver
@@ -39,6 +39,21 @@ def addToCartById(giftCardName, id):
 
     addToCart_btn = card_field.find_element_by_class_name("span2")
     addToCart_btn.find_element_by_name("commit").submit()
+
+def getCartInfo():
+    global driver
+    url = "https://www.raise.com/cart"
+    gotoPage(url)
+    totalPrice_field = None
+    try:
+        totalPrice_field = driver.find_element_by_xpath('//tr[@class="summary"]')
+    except:
+        return {"count":0,"totalPrice":0}
+    
+    t = totalPrice_field.find_element_by_class_name("right").text
+    countCards_field = driver.find_element_by_xpath('//div[@class="span8 content left"]').find_element_by_tag_name('h2')
+    c = countCards_field.text.split(' ')[0]
+    return {"count":int(c),"totalPrice":float(t[1:])}
     
 def checkout():
     global driver
@@ -54,15 +69,17 @@ def parseCardField(card_field):
 
     if(len(contentList)!=3):
         return None
-    listPrice = contentList[0].text
-    percent = contentList[1].text
-    finalPrice = contentList[2].text
-
+    listPrice_text = contentList[0].text.strip()
+    percent_text = contentList[1].text.strip()
+    finalPrice_text = contentList[2].text[1:contentList[2].text.index('+')].strip()
+    listPrice = float(listPrice_text[1:].replace(',',''))
+    percent = float(percent_text[:-1].replace(',',''))
+    finalPrice = float(finalPrice_text.replace(',',''))
     addToCart_btn = card_field.find_element_by_class_name("span2")
     addToCart_btn.find_element_by_name("commit")
 
     return {"id":id,"listPrice":listPrice,"percent":percent,"finalPrice":finalPrice,"addToCart_btn":addToCart_btn}
-    
+
 def getCardList(giftCardName):
     global driver
     ret=[]

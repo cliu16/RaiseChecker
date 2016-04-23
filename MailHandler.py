@@ -12,6 +12,10 @@ sender = ""
 receivers = []
 
 def init(m_user, m_pass):
+    global mail_user
+    global mail_pass
+    global sender
+    global receivers
     mail_user=m_user
     mail_pass=m_pass
     sender = mail_user+'@gmail.com'
