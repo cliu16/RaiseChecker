@@ -18,9 +18,7 @@ idSet=set()
 def checkIsNewDiscount(card):
     global idSet
     cardId = card["id"]
-    print "len set : " + str(len(idSet))
     if cardId in idSet:
-        print "contains " + cardId
         return False
     idSet.add(cardId)
     return True
