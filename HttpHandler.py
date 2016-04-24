@@ -63,8 +63,14 @@ def checkout():
     #Checkout
     url = "https://www.raise.com/cart"
     gotoPage(url)
+    raw_input("Warning!!!! Checkout!!!")
     checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
     checkout_btn.click()
+    time.sleep(2)
+    raw_input("Final Warning!!!! Checkout!!!")
+    checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
+    checkout_btn.click()
+    time.sleep(2)
 
 def clearShoppingCart():
     global driver
