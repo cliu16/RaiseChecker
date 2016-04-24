@@ -3,10 +3,12 @@ import time
 
 driver=None
 
-def login(user, password):
+def login(user, password, visible):
     global driver
-    driver = webdriver.Firefox()
-#    driver = webdriver.PhantomJS()
+    if visible == True:
+        driver = webdriver.Firefox()
+    else:
+        driver = webdriver.PhantomJS()
     login_url = "https://www.raise.com/user/sign_in"
     gotoPage(login_url)
     email_field = driver.find_element_by_xpath('//input[@id="user_email"]')

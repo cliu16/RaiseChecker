@@ -68,17 +68,18 @@ def process():
     clearSet()
     HttpHandler.clearShoppingCart()
 
-ConfigHandler.initConfig()
-ConfigHandler.displayConfig()
-HttpHandler.login(ConfigHandler.RaiseUser, ConfigHandler.RaisePass)
-MailHandler.init(ConfigHandler.GmailUser, ConfigHandler.GmailPass)
+if __name__ == "__main__":
+    ConfigHandler.initConfig()
+    ConfigHandler.displayConfig()
+    HttpHandler.login(ConfigHandler.RaiseUser, ConfigHandler.RaisePass, ConfigHandler.VisibleBrowser)
+    MailHandler.init(ConfigHandler.GmailUser, ConfigHandler.GmailPass)
 
-while True:
-    try:
-        process()
-        time.sleep(5)
-    except:
-        pass
+    while True:
+        try:
+            process()
+            time.sleep(5)
+        except:
+            pass
 
-time.sleep(5)
-HttpHandler.logout()
+    time.sleep(5)
+    HttpHandler.logout()

@@ -9,6 +9,7 @@ GmailUser=""
 GmailPass=""
 MaxCardsPerOrder=0
 MaxPricePerOrder=0
+VisibleBrowser=True
 
 def initConfig():
     with open(configFile) as f:
@@ -27,6 +28,7 @@ def fillParams(key, val):
     global GmailPass
     global MaxCardsPerOrder
     global MaxPricePerOrder
+    global VisibleBrowser
     
     if key == "Gift Card Name":
         GiftCardName=val
@@ -46,6 +48,11 @@ def fillParams(key, val):
         MaxCardsPerOrder=int(val)
     elif key == "Max Price Per Order":
         MaxPricePerOrder=float(val)
+    elif key == "Visible Browser":
+        if val.lower() == "false":
+            VisibleBrowser=False
+        else:
+            VisibleBrowser=True
 
 def displayConfig():
     ret = "Gift Card Name : " + str(GiftCardName) + "\n"
@@ -57,6 +64,7 @@ def displayConfig():
     ret += "Gmail Password : " + str(GmailPass) + "\n"
     ret += "Max Cards Per Order : " + str(MaxCardsPerOrder) + "\n"
     ret += "Max Price Per Order : " + str(MaxPricePerOrder) + "\n"
+    ret += "Visible Browser : " + str(VisibleBrowser) + "\n"
     print ret
         
         
