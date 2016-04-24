@@ -18,16 +18,22 @@ idSet=set()
 def checkIsNewDiscount(card):
     global idSet
     cardId = card["id"]
+    print "len set : " + str(len(idSet))
     if cardId in idSet:
+        print "contains " + cardId
         return False
     idSet.add(cardId)
     return True
+
+def clearSet():
+    global idSet
+    idSet=set()
     
 def sendEmailNotify(card):
     currentTime = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
     msg = "TIME: " + str(currentTime) + '\tPrice: $' + str(card["listPrice"]) + '\tPercent: ' + str(card["percent"]) + '%\tFinal Price: $' + str(card["finalPrice"])
     print msg
-    MailHandler.sendMsg("Purchased Log : " + ConfigHandler.GiftCardName + '\t$'+str(card["listPrice"])+'\t'+str(card["percent"])+'%', msg)
+    MailHandler.sendMsg("Purchase Log : " + ConfigHandler.GiftCardName + '\t$'+str(card["listPrice"])+'\t'+str(card["percent"])+'%', msg)
 
 def addCardsToCart(purchaseList):
     for oneCard in purchaseList:
@@ -40,6 +46,7 @@ def process():
     cardList = HttpHandler.getCardList(ConfigHandler.GiftCardName)
     countCart = cartInfo["count"]
     priceCart = cartInfo["totalPrice"]
+    print "Ping Info : " + datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S') + '\tCards in Cart : ' + str(countCart) + '\tTotal Price in Cart : ' + str(priceCart)
     countSum = 0
     priceSum = 0
     purchaseList = []
@@ -60,6 +67,8 @@ def process():
     addCardsToCart(purchaseList)
     time.sleep(1)
     HttpHandler.checkout()
+    clearSet()
+    HttpHandler.clearShoppingCart()
 
 ConfigHandler.initConfig()
 ConfigHandler.displayConfig()
@@ -69,7 +78,6 @@ MailHandler.init(ConfigHandler.GmailUser, ConfigHandler.GmailPass)
 while True:
     process()
     time.sleep(5)
-    print "Ping : " + datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
 
 time.sleep(5)
 HttpHandler.logout()

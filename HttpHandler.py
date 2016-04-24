@@ -6,6 +6,7 @@ driver=None
 def login(user, password):
     global driver
     driver = webdriver.Firefox()
+#    driver = webdriver.PhantomJS()
     login_url = "https://www.raise.com/user/sign_in"
     gotoPage(login_url)
     email_field = driver.find_element_by_xpath('//input[@id="user_email"]')
@@ -50,7 +51,7 @@ def getCartInfo():
     except:
         return {"count":0,"totalPrice":0}
     
-    t = totalPrice_field.find_element_by_class_name("right").text
+    t = totalPrice_field.find_element_by_class_name("right").text.replace(',','')
     countCards_field = driver.find_element_by_xpath('//div[@class="span8 content left"]').find_element_by_tag_name('h2')
     c = countCards_field.text.split(' ')[0]
     return {"count":int(c),"totalPrice":float(t[1:])}
@@ -63,6 +64,15 @@ def checkout():
     checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
     checkout_btn.click()
 
+def clearShoppingCart():
+    global driver
+    url = "https://www.raise.com/cart"
+    gotoPage(url)
+    remove_btn_list = driver.find_elements_by_xpath('//input[@name="commit"]')
+    for x in range(0, len(remove_btn_list)):
+        remove_btn = driver.find_element_by_xpath('//input[@name="commit"]')
+        remove_btn.submit()
+        
 def parseCardField(card_field):
     id = card_field.get_attribute("id")
     contentList = card_field.find_elements_by_class_name("right")
