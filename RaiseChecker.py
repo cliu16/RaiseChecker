@@ -76,8 +76,11 @@ HttpHandler.login(ConfigHandler.RaiseUser, ConfigHandler.RaisePass)
 MailHandler.init(ConfigHandler.GmailUser, ConfigHandler.GmailPass)
 
 while True:
-    process()
-    time.sleep(5)
+    try:
+        process()
+        time.sleep(5)
+    except:
+        pass
 
 time.sleep(5)
 HttpHandler.logout()
