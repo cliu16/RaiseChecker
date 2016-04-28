@@ -1,10 +1,12 @@
 Gift Card Name : target
-Price Min Per Card : 100
-Percent Min Per Card : 4.1
-Raise Username : xiaodeal_user@gmail.com
-Raise Password : xiaodeal_pass
-Gmail Username : xiaodeal_user
-Gmail Password : xiaodeal_pass
-Max Cards Per Order : 2
+Price Min Per Card : 200
+Percent Min Per Card : 5
+Raise Username : lululu@gamil.com
+Raise Password : lululu
+Gmail Username : lululu
+Gmail Password : lululu
+Max Cards Per Order : 1
 Max Price Per Order : 2000
-Visible Browser : false
+Visible Browser : true
+Max Price Total Order : 2000
+Max Cards Total Order : 10

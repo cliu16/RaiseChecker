@@ -10,9 +10,15 @@ GmailPass=""
 MaxCardsPerOrder=0
 MaxPricePerOrder=0
 VisibleBrowser=True
+MaxPriceTotalOrder=0
+MaxCardsTotalOrder=0
 
-def initConfig():
+def initConfig(cFile):
+    global configFile
+    if cFile != None:
+        configFile = cFile
     with open(configFile) as f:
+        print 'Cofing File Path : ' + configFile
         contents = f.readlines()
         for content in contents:
             line = content.split(':')
@@ -29,6 +35,8 @@ def fillParams(key, val):
     global MaxCardsPerOrder
     global MaxPricePerOrder
     global VisibleBrowser
+    global MaxPriceTotalOrder
+    global MaxCardsTotalOrder
     
     if key == "Gift Card Name":
         GiftCardName=val
@@ -53,6 +61,10 @@ def fillParams(key, val):
             VisibleBrowser=False
         else:
             VisibleBrowser=True
+    elif key == "Max Price Total Order":
+        MaxPriceTotalOrder=float(val)
+    elif key == "Max Cards Total Order":
+        MaxCardsTotalOrder=int(val)
 
 def displayConfig():
     ret = "Gift Card Name : " + str(GiftCardName) + "\n"
@@ -65,6 +77,8 @@ def displayConfig():
     ret += "Max Cards Per Order : " + str(MaxCardsPerOrder) + "\n"
     ret += "Max Price Per Order : " + str(MaxPricePerOrder) + "\n"
     ret += "Visible Browser : " + str(VisibleBrowser) + "\n"
+    ret += "Max Price Total Order : " + str(MaxPriceTotalOrder) + "\n"
+    ret += "Max Cards Total Order : " + str(MaxCardsTotalOrder) + "\n"
     print ret
         
         

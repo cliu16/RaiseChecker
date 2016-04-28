@@ -1,8 +1,12 @@
+import sys
 import datetime
 import HttpHandler
 import time
 import MailHandler
 import ConfigHandler
+
+priceTotalOrder = 0
+cardsTotalOrder = 0
 
 def checkIsGoodDiscount(card):
     num_percent = float(card["percent"])
@@ -40,15 +44,20 @@ def addCardsToCart(purchaseList):
         HttpHandler.addToCartById(ConfigHandler.GiftCardName, oneCard["id"])
         
 def process():
+    global priceTotalOrder
+    global cardsTotalOrder
     cartInfo = HttpHandler.getCartInfo()
     cardList = HttpHandler.getCardList(ConfigHandler.GiftCardName)
     countCart = cartInfo["count"]
     priceCart = cartInfo["totalPrice"]
-    print "Ping Info : " + datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S') + '\tCards in Cart : ' + str(countCart) + '\tTotal Price in Cart : ' + str(priceCart)
     countSum = 0
     priceSum = 0
     purchaseList = []
     for card in cardList:
+        if priceTotalOrder + priceSum + card["finalPrice"] + priceCart > ConfigHandler.MaxPriceTotalOrder:
+            continue
+        if cardsTotalOrder + countSum + 1 + countCart > ConfigHandler.MaxCardsTotalOrder:
+            continue
         if countSum + 1 + countCart > ConfigHandler.MaxCardsPerOrder:
             continue
         if priceSum + card["finalPrice"] + priceCart > ConfigHandler.MaxPricePerOrder:
@@ -59,27 +68,42 @@ def process():
             continue
         countSum += 1
         priceSum += card["finalPrice"]
+        priceTotalOrder += card["finalPrice"]
+        cardsTotalOrder += 1
         purchaseList.append(card)
     if len(purchaseList) == 0:
-        return 
+        return checkIfContinue(priceTotalOrder, cardsTotalOrder)
     addCardsToCart(purchaseList)
     time.sleep(1)
     HttpHandler.checkout()
     clearSet()
     HttpHandler.clearShoppingCart()
+    return checkIfContinue(priceTotalOrder, cardsTotalOrder)
+
+def checkIfContinue(priceTotalOrder, cardsTotalOrder):
+    print "Ping Info : " + datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S') + '\n\tCards Total Purchased : ' + str(cardsTotalOrder) + '/' + str(ConfigHandler.MaxCardsTotalOrder)  + '\n\tPrice Total Purchased : ' + str(priceTotalOrder) + '/' + str(ConfigHandler.MaxPriceTotalOrder)
+    if priceTotalOrder >= ConfigHandler.MaxPriceTotalOrder:
+        return False
+    if cardsTotalOrder >= ConfigHandler.MaxCardsTotalOrder:
+        return False
+    return True
 
 if __name__ == "__main__":
-    ConfigHandler.initConfig()
+    configFile = None
+    if len(sys.argv) == 2:
+        configFile = sys.argv[1]
+    ConfigHandler.initConfig(configFile)
     ConfigHandler.displayConfig()
     HttpHandler.login(ConfigHandler.RaiseUser, ConfigHandler.RaisePass, ConfigHandler.VisibleBrowser)
     MailHandler.init(ConfigHandler.GmailUser, ConfigHandler.GmailPass)
 
-    while True:
+    ret = True
+    while ret:
         try:
-            process()
+            ret = process()
             time.sleep(5)
         except:
-            pass
+            ret = False
 
     time.sleep(5)
     HttpHandler.logout()
