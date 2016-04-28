@@ -66,9 +66,26 @@ def checkout():
     checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
     checkout_btn.click()
     time.sleep(2)
-    checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
+    try:
+        checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
+    except:
+        return False
+    raw_input("Press Enter to Pay!!!")
     checkout_btn.click()
     time.sleep(2)
+    return True
+
+def verifyDevice():
+    global driver
+    email_btn = driver.find_element_by_xpath('//a[@class="btn btn-action phone-verification-option device-verification-delivery"]')
+    email_btn.click()
+    code = raw_input("Type the verification code:\n")
+    print 'Code entered is : ' + code
+    code_field = driver.find_element_by_xpath('//input[@id="device_verification_code"]')
+    code_field.clear()
+    code_field.send_keys(code)
+    verify_btn = driver.find_element_by_xpath('//input[@name="commit"]')
+    verify_btn.submit()
 
 def clearShoppingCart():
     global driver

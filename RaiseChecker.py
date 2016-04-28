@@ -75,7 +75,10 @@ def process():
         return checkIfContinue(priceTotalOrder, cardsTotalOrder)
     addCardsToCart(purchaseList)
     time.sleep(1)
-    HttpHandler.checkout()
+    success =  HttpHandler.checkout()
+    if success == False:
+        HttpHandler.verifyDevice()
+        HttpHandler.checkout()
     clearSet()
     HttpHandler.clearShoppingCart()
     return checkIfContinue(priceTotalOrder, cardsTotalOrder)
