@@ -18,4 +18,7 @@ Add Path for example : export PATH=/Users/lululu/Downloads/phantomjs-2.1.1-macos
   2. Edit config.txt(Visible Browser=true means open firefox browser, Visible Browser=fale means run in command line)
   3. shell> ./start.sh
 
-
+# get all giftcards purchased on/after a certain date
+  shell > python GetOrders.py
+  input date when asked.
+  copy gift codes from terminal for now.
