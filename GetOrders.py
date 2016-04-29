@@ -6,7 +6,8 @@ import MailHandler
 import ConfigHandler
 
 def process():
-    orderList = HttpHandler.getOrderList()
+    raw = raw_input("Input the start date of your order (mm/dd/yy) or how many orders you want to look up (1 , 2 etc).")
+    orderList = HttpHandler.getOrderList(raw)
     for orderNumber in orderList:
         HttpHandler.getOrder(orderNumber)
 
