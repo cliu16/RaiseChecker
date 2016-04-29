@@ -21,9 +21,9 @@ def login(user, password, visible):
     password_field.clear()
     password_field.send_keys(password)
     login_btn = driver.find_element_by_xpath('//input[@name="commit"]')
-    time.sleep(3)
+    time.sleep(1)
     login_btn.click()
-    time.sleep(3)
+    time.sleep(1)
 
 def gotoPage(url):
     global driver
@@ -128,14 +128,39 @@ def getCardList(giftCardName):
     return ret
 
 def getOrderList():
-    startDate = raw_input("Input the start date of your order (m/d/y)")
+    global driver
+    rawDate = raw_input("Input the start date of your order (mm/dd/yy)")
+    startDate = parse(rawDate)
+    url = 'https://www.raise.com/my_orders?page={}' # + page number
     ret=[]
-    url = 'https://www.raise.com/my_orders?page=' # + page number
-    gotoPage(url)
+    page = 0
+    while page < 2:
+        page+=1
+        url = url.format(page)
+        gotoPage(url)
+        order_list = driver.find_elements_by_tag_name("tr")
+        for order in order_list:
+            contentList = order.find_elements_by_tag_name("td")
+            if not contentList:
+                continue
+            orderDate = contentList[0].text.strip()
+            if parse(orderDate) < startDate:
+                return ret
+            orderNumber = contentList[1].text.strip()
+            ret.append(orderNumber)
+    return ret
 
-    order_list = driver.find_elements_by_class_name("table responsive")
-    return order_list
-    
+def getOrder(orderNumber):
+    global driver
+    url = 'https://www.raise.com/my_orders/{}'.format(orderNumber)
+    gotoPage(url)
+    time.sleep(1)
+    main_content = driver.find_element_by_tag_name('tbody')
+    price_list = main_content.find_elements_by_class_name("right")
+    code_list = main_content.find_elements_by_class_name("inspectlet-sensitive")
+    for i in range(0,len(price_list)):
+        print price_list[i].text.strip(), code_list[i].text.strip()
+
 def logout():
     global driver
     driver.close()

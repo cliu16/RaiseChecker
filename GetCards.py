@@ -7,8 +7,8 @@ import ConfigHandler
 
 def process():
     orderList = HttpHandler.getOrderList()
-    for order in orderList:
-        print order
+    for orderNumber in orderList:
+        HttpHandler.getOrder(orderNumber)
 
 if __name__ == "__main__":
     configFile = None
