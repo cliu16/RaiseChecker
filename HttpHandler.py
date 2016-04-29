@@ -131,12 +131,12 @@ def getOrderList():
     global driver
     rawDate = raw_input("Input the start date of your order (mm/dd/yy)")
     startDate = parse(rawDate)
-    url = 'https://www.raise.com/my_orders?page={}' # + page number
+    base_url = 'https://www.raise.com/my_orders?page={}' # + page number
     ret=[]
     page = 0
     while page < 2:
         page+=1
-        url = url.format(page)
+        url = base_url.format(page)
         gotoPage(url)
         order_list = driver.find_elements_by_tag_name("tr")
         for order in order_list:
