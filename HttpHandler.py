@@ -1,5 +1,6 @@
 from selenium import webdriver
 import time
+from dateutil.parser import parse
 
 driver=None
 
@@ -126,6 +127,15 @@ def getCardList(giftCardName):
 
     return ret
 
+def getOrderList():
+    startDate = raw_input("Input the start date of your order (m/d/y)")
+    ret=[]
+    url = 'https://www.raise.com/my_orders?page=' # + page number
+    gotoPage(url)
+
+    order_list = driver.find_elements_by_class_name("table responsive")
+    return order_list
+    
 def logout():
     global driver
     driver.close()
