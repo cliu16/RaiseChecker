@@ -1,7 +1,7 @@
 Gift Card Name : target
 Price Min Per Card : 200
 Percent Min Per Card : 5
-Raise Username : lululu@gamil.com
+Raise Username : lululu 
 Raise Password : lululu
 Gmail Username : lululu
 Gmail Password : lululu
