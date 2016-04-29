@@ -139,8 +139,8 @@ def getOrderList(raw):
             wantedOrders = int(raw)
             print "Look up recent {} orders.".format(wantedOrders)
     except:
-        print "Can't understand what you input. Just gonna fetch you recent 3 orders."
         wantedOrders = 3
+        print "Can't understand what you input. Just gonna fetch you recent {} orders.".format(wantedOrders)
     base_url = 'https://www.raise.com/my_orders?page={}' # + page number
     ret=[]
     page = 0
