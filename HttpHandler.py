@@ -129,8 +129,19 @@ def getCardList(giftCardName):
 
 def getOrderList():
     global driver
-    rawDate = raw_input("Input the start date of your order (mm/dd/yy)")
-    startDate = parse(rawDate)
+    wantedOrders = None
+    startDate = None
+    raw = raw_input("Input the start date of your order (mm/dd/yy) or how many orders you want to look up (1 , 2 etc).")
+    try:
+        if '/' in raw:
+            startDate = parse(raw)
+            print "Look up all orders placed on/after date {}.".format(startDate)
+        else:
+            wantedOrders = int(raw)
+            print "Look up recent {} orders.".format(wantedOrders)
+    except:
+        print "Can't understand what you input."
+        exit()
     base_url = 'https://www.raise.com/my_orders?page={}' # + page number
     ret=[]
     page = 0
@@ -144,8 +155,12 @@ def getOrderList():
             if not contentList:
                 continue
             orderDate = contentList[0].text.strip()
-            if parse(orderDate) < startDate:
-                return ret
+            if startDate:
+                if parse(orderDate) < startDate:
+                    return ret
+            elif wantedOrders:
+                if len(ret) >= wantedOrders:
+                    return ret
             orderNumber = contentList[1].text.strip()
             ret.append(orderNumber)
     return ret
@@ -164,3 +179,4 @@ def getOrder(orderNumber):
 def logout():
     global driver
     driver.close()
+
