@@ -127,11 +127,10 @@ def getCardList(giftCardName):
 
     return ret
 
-def getOrderList():
+def getOrderList(raw):
     global driver
     wantedOrders = None
     startDate = None
-    raw = raw_input("Input the start date of your order (mm/dd/yy) or how many orders you want to look up (1 , 2 etc).")
     try:
         if '/' in raw:
             startDate = parse(raw)
@@ -140,8 +139,8 @@ def getOrderList():
             wantedOrders = int(raw)
             print "Look up recent {} orders.".format(wantedOrders)
     except:
-        print "Can't understand what you input."
-        exit()
+        wantedOrders = 3
+        print "Can't understand what you input. Just gonna fetch you recent {} orders.".format(wantedOrders)
     base_url = 'https://www.raise.com/my_orders?page={}' # + page number
     ret=[]
     page = 0
