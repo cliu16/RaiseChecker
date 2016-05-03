@@ -75,10 +75,17 @@ def process():
         return checkIfContinue(priceTotalOrder, cardsTotalOrder)
     addCardsToCart(purchaseList)
     time.sleep(1)
-    success =  HttpHandler.checkout()
-    if success == False:
+    retCode =  HttpHandler.checkout()
+    if retCode == 1:
+        print "Need to verify device"
         HttpHandler.verifyDevice()
         HttpHandler.checkout()
+    elif retCode == 2:
+        print "The card is purchased by others"
+        priceTotalOrder -= card["finalPrice"]
+        cardsTotalOrder -= 1
+        msg =  "Ping Info : " + datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S') + '\n\tCards Total Purchased : ' + str(cardsTotalOrder) + '/' + str(ConfigHandler.MaxCardsTotalOrder)  + '\n\tPrice Total Purchased : ' + str(priceTotalOrder) + '/' + str(ConfigHandler.MaxPriceTotalOrder)
+        MailHandler.sendMsg("Checkout exception",msg)
     clearSet()
     HttpHandler.clearShoppingCart()
     return checkIfContinue(priceTotalOrder, cardsTotalOrder)
@@ -105,7 +112,8 @@ if __name__ == "__main__":
         try:
             ret = process()
             time.sleep(5)
-        except:
+        except Exception,e:
+            print str(e)
             ret = False
 
     time.sleep(5)

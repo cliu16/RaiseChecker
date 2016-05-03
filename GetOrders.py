@@ -6,10 +6,24 @@ import MailHandler
 import ConfigHandler
 
 def process(raw):
+    orderInfoList = getOrderInfo(raw)
+    fName = ConfigHandler.GiftCardName + "-" + datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S') + ".csv"
+    saveListToFile(fName , orderInfoList)
+    
+def getOrderInfo(raw):
     orderList = HttpHandler.getOrderList(raw)
+    orderInfoList = []
     for orderNumber in orderList:
-        HttpHandler.getOrder(orderNumber)
+        orderInfoList.append(HttpHandler.getOrder(orderNumber))
+    return orderInfoList
 
+def saveListToFile(fName, orderInfoList):
+    with open(fName, 'w') as f:
+        f.write("Face Value, Price, SN, PIN\n")
+        for orderInfo in orderInfoList:
+            line = str(orderInfo["faceValue"]) + "," + str(orderInfo["price"]) + "," + str(orderInfo["SN"]) + "," + str(orderInfo["PIN"])
+            f.write(line+"\n")
+            
 if __name__ == "__main__":
     configFile = None
     if len(sys.argv) == 2:

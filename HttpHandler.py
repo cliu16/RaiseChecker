@@ -1,6 +1,5 @@
 from selenium import webdriver
 import time
-from dateutil.parser import parse
 
 driver=None
 
@@ -21,9 +20,9 @@ def login(user, password, visible):
     password_field.clear()
     password_field.send_keys(password)
     login_btn = driver.find_element_by_xpath('//input[@name="commit"]')
-    time.sleep(1)
+    time.sleep(3)
     login_btn.click()
-    time.sleep(1)
+    time.sleep(3)
 
 def gotoPage(url):
     global driver
@@ -66,15 +65,23 @@ def checkout():
     gotoPage(url)
     checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
     checkout_btn.click()
-    time.sleep(2)
+    time.sleep(1)
     try:
         checkout_btn = driver.find_element_by_xpath('//a[@class="btn btn-primary btn-block btn-xlarge"]')
-    except:
-        return False
-    raw_input("Press Enter to Pay!!!")
-    checkout_btn.click()
-    time.sleep(2)
-    return True
+    except Exception,e:
+        print str(e)
+        return 1
+
+    try:
+        ##raw_input("Press Enter to Pay!!!")
+        print "Checking out #1"
+        checkout_btn.click()
+        time.sleep(1)
+        print "Checking out Done!"
+    except Exception,e:
+        print str(e)
+        return 2
+    return 0
 
 def verifyDevice():
     global driver
@@ -127,55 +134,6 @@ def getCardList(giftCardName):
 
     return ret
 
-def getOrderList(raw):
-    global driver
-    wantedOrders = None
-    startDate = None
-    try:
-        if '/' in raw:
-            startDate = parse(raw)
-            print "Look up all orders placed on/after date {}.".format(startDate)
-        else:
-            wantedOrders = int(raw)
-            print "Look up recent {} orders.".format(wantedOrders)
-    except:
-        wantedOrders = 3
-        print "Can't understand what you input. Just gonna fetch you recent {} orders.".format(wantedOrders)
-    base_url = 'https://www.raise.com/my_orders?page={}' # + page number
-    ret=[]
-    page = 0
-    while page < 2:
-        page+=1
-        url = base_url.format(page)
-        gotoPage(url)
-        order_list = driver.find_elements_by_tag_name("tr")
-        for order in order_list:
-            contentList = order.find_elements_by_tag_name("td")
-            if not contentList:
-                continue
-            orderDate = contentList[0].text.strip()
-            if startDate:
-                if parse(orderDate) < startDate:
-                    return ret
-            elif wantedOrders:
-                if len(ret) >= wantedOrders:
-                    return ret
-            orderNumber = contentList[1].text.strip()
-            ret.append(orderNumber)
-    return ret
-
-def getOrder(orderNumber):
-    global driver
-    url = 'https://www.raise.com/my_orders/{}'.format(orderNumber)
-    gotoPage(url)
-    time.sleep(1)
-    main_content = driver.find_element_by_tag_name('tbody')
-    price_list = main_content.find_elements_by_class_name("right")
-    code_list = main_content.find_elements_by_class_name("inspectlet-sensitive")
-    for i in range(0,len(price_list)):
-        print price_list[i].text.strip(), code_list[i].text.strip()
-
 def logout():
     global driver
     driver.close()
-
